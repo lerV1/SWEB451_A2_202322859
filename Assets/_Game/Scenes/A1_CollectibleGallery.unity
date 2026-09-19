@@ -283,6 +283,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6573825382770608150, guid: c3bde61cd44628e4392407fc430f5c4b, type: 3}
+      propertyPath: bobSpeed
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6573825382770608150, guid: c3bde61cd44628e4392407fc430f5c4b, type: 3}
+      propertyPath: bobHeight
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6573825382770608150, guid: c3bde61cd44628e4392407fc430f5c4b, type: 3}
+      propertyPath: rotationSpeed
+      value: 45
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -723,6 +735,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6573825382770608150, guid: c3bde61cd44628e4392407fc430f5c4b, type: 3}
+      propertyPath: bobHeight
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6573825382770608150, guid: c3bde61cd44628e4392407fc430f5c4b, type: 3}
+      propertyPath: rotationSpeed
+      value: -60
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1112,6 +1132,18 @@ PrefabInstance:
     - target: {fileID: 5134946607820527744, guid: c3bde61cd44628e4392407fc430f5c4b, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6573825382770608150, guid: c3bde61cd44628e4392407fc430f5c4b, type: 3}
+      propertyPath: bobSpeed
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6573825382770608150, guid: c3bde61cd44628e4392407fc430f5c4b, type: 3}
+      propertyPath: bobHeight
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 6573825382770608150, guid: c3bde61cd44628e4392407fc430f5c4b, type: 3}
+      propertyPath: rotationSpeed
+      value: 90
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
