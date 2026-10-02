@@ -1,14 +1,18 @@
 using UnityEngine;
+using System;
 public class ResetZone : MonoBehaviour
 {
-    [SerializeField] private GameConfig config;
+    public static event Action PlayerRespawned;
     private void OnTriggerEnter(Collider other)
     {
         PlayerMotor motor =
         other.GetComponentInParent<PlayerMotor>();
         if (motor != null)
         {
-            motor.Respawn(config.respawnPosition);
+            motor.Respawn();
+            if (PlayerRespawned != null) {
+                PlayerRespawned.Invoke();
+            }
         }
     }
 }

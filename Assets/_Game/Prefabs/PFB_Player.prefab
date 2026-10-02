@@ -173,7 +173,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 2
 --- !u!114 &4492861122247403870
 MonoBehaviour:
@@ -190,6 +190,8 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: 05da0417e1265ad4b9abd2818308f49c, type: 2}
   moveAction: {fileID: 1172845483678449997, guid: 36325debe48873d4dad04be2a1ba33b1, type: 3}
   jumpAction: {fileID: -8690018750757836558, guid: 36325debe48873d4dad04be2a1ba33b1, type: 3}
+  sprintAction: {fileID: -5956677866467721584, guid: 36325debe48873d4dad04be2a1ba33b1, type: 3}
+  sprintMultiplier: 1.5
   groundLayers:
     serializedVersion: 2
     m_Bits: 128

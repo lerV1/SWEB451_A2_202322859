@@ -8,62 +8,128 @@ public class PlayerMotor : MonoBehaviour
     [Header("Input Actions")]
     [SerializeField] private InputActionReference moveAction;
     [SerializeField] private InputActionReference jumpAction;
+    [SerializeField] private InputActionReference sprintAction;
+    [Header("sprintMultiplier")]
+    [SerializeField] private float sprintMultiplier = 1.5f;
+    [Header("Air Control")]
+    [SerializeField, Range(0f, 1f)] private float airControlMultiplier = 0.35f;
     [Header("Ground Check")]
     [SerializeField] private LayerMask groundLayers;
     [SerializeField, Min(0.01f)]
+
     private float groundPadding = 0.15f;
+
     private Rigidbody body;
     private Collider bodyCollider;
     private Vector2 moveInput;
     private bool jumpRequested;
+    private Vector3 currentRespawnPosition;
     private void Awake()
     {
         body = GetComponent<Rigidbody>();
         bodyCollider = GetComponent<Collider>();
+        currentRespawnPosition = config.respawnPosition;
     }
+
     private void OnEnable()
     {
         moveAction.action.Enable();
         jumpAction.action.Enable();
         jumpAction.action.performed += QueueJump;
+        sprintAction.action.Enable();
     }
     private void OnDisable()
     {
         jumpAction.action.performed -= QueueJump;
         moveAction.action.Disable();
         jumpAction.action.Disable();
+        sprintAction.action.Disable();
     }
-    private void Update()
+    private void ReadMoveInput()
     {
         moveInput = moveAction.action.ReadValue<Vector2>();
     }
-    private void FixedUpdate()
+    private float GetActiveMoveSpeed()
+    {
+        float activeMoveSpeed = config.moveSpeed;
+
+        if (sprintAction.action.IsPressed())
+        {
+            activeMoveSpeed *= sprintMultiplier;
+        }
+
+        return activeMoveSpeed;
+    }
+    private float GetActiveAcceleration(bool grounded)
+    {
+        if (grounded)
+        {
+            return config.acceleration;
+        }
+
+        return config.acceleration * airControlMultiplier;
+    }
+    private void ApplyHorizontalMovement(
+    float activeMoveSpeed,
+    float activeAcceleration)
     {
         Vector3 desiredHorizontal =
-        new Vector3(moveInput.x, 0f, moveInput.y);
+            new Vector3(moveInput.x, 0f, moveInput.y);
+
         if (desiredHorizontal.sqrMagnitude > 1f)
         {
             desiredHorizontal.Normalize();
         }
-        desiredHorizontal *= config.moveSpeed;
+
+        desiredHorizontal *= activeMoveSpeed;
+
         Vector3 currentVelocity = body.linearVelocity;
+
         Vector3 currentHorizontal = new Vector3(
-        currentVelocity.x, 0f, currentVelocity.z);
+            currentVelocity.x,
+            0f,
+            currentVelocity.z);
+
         Vector3 nextHorizontal = Vector3.MoveTowards(
-        currentHorizontal,
-        desiredHorizontal,
-        config.acceleration * Time.fixedDeltaTime);
+            currentHorizontal,
+            desiredHorizontal,
+            activeAcceleration * Time.fixedDeltaTime);
+
         body.linearVelocity = new Vector3(
-        nextHorizontal.x,
-        currentVelocity.y,
-        nextHorizontal.z);
-        if (jumpRequested && IsGrounded())
+            nextHorizontal.x,
+            currentVelocity.y,
+            nextHorizontal.z);
+    }
+    private void TryJump(bool grounded)
+    {
+        if (jumpRequested && grounded)
         {
             body.AddForce(
-            Vector3.up * config.jumpImpulse,
-            ForceMode.Impulse);
+                Vector3.up * config.jumpImpulse,
+                ForceMode.Impulse);
         }
+
         jumpRequested = false;
+    }
+
+    private void Update()
+    {
+        ReadMoveInput();
+    }
+
+    private void FixedUpdate()
+    {
+        bool grounded = IsGrounded();
+
+        float activeMoveSpeed = GetActiveMoveSpeed();
+        float activeAcceleration =
+            GetActiveAcceleration(grounded);
+
+        ApplyHorizontalMovement(
+            activeMoveSpeed,
+            activeAcceleration);
+
+        TryJump(grounded);
     }
     private void QueueJump(InputAction.CallbackContext context)
     {
@@ -80,13 +146,18 @@ public class PlayerMotor : MonoBehaviour
         groundLayers,
         QueryTriggerInteraction.Ignore);
     }
-    public void Respawn(Vector3 worldPosition)
+    public void SetRespawnPosition(Vector3 newPosition)
     {
-        body.position = worldPosition;
+        currentRespawnPosition = newPosition;
+    }
+    public void Respawn()
+    {
+        body.position = currentRespawnPosition;
         body.rotation = Quaternion.identity;
         body.linearVelocity = Vector3.zero;
         body.angularVelocity = Vector3.zero;
     }
+
     private void OnDrawGizmosSelected()
     {
         Collider currentCollider = bodyCollider != null

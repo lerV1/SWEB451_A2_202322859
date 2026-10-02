@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 [RequireComponent(typeof(Collider))]
 public class GoalZone : MonoBehaviour
 {
@@ -10,8 +11,12 @@ public class GoalZone : MonoBehaviour
     [SerializeField] private Color unlockedColor = Color.green;
     [SerializeField] private float lockedIntensity = 0.5f;
     [SerializeField] private float unlockedIntensity = 3f;
+    [SerializeField] private float pulseSpeed = 2f;
+    [SerializeField] private float pulseAmount = 0.4f;
     private bool unlocked;
+    private bool completionReported;
     private Material runtimeMaterial;
+    public static event Action CourseCompleted;
     private void Awake()
     {
         GetComponent<Collider>().isTrigger = true;
@@ -65,8 +70,38 @@ public class GoalZone : MonoBehaviour
         {
             return;
         }
-        Debug.Log(unlocked
-        ? "Course complete!"
-        : "Goal locked: collect every energy node.");
+        if (unlocked)
+        {
+            Debug.Log("Course complete! Respawns: " +
+                session.RespawnCount);
+
+            if (!completionReported)
+            {
+                completionReported = true;
+                if (CourseCompleted != null)
+                {
+                    CourseCompleted.Invoke();
+                }
+            }
+        }
+        else
+        {
+            Debug.Log(
+            "Goal locked. Remaining collectibles: " +
+            session.RemainingCollectibles);
+        }
+
+
+    }
+    private void Update()
+    {
+        if (!unlocked && goalLight != null)
+        {
+            float pulse =
+                Mathf.PingPong(Time.time * pulseSpeed, pulseAmount);
+
+            goalLight.intensity =
+                lockedIntensity + pulse;
+        }
     }
 }
