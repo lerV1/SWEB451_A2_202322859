@@ -157,7 +157,7 @@ Rigidbody:
   m_GameObject: {fileID: 5313561034441014626}
   serializedVersion: 5
   m_Mass: 1
-  m_LinearDamping: 4
+  m_LinearDamping: 1
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -192,6 +192,7 @@ MonoBehaviour:
   jumpAction: {fileID: -8690018750757836558, guid: 36325debe48873d4dad04be2a1ba33b1, type: 3}
   sprintAction: {fileID: -5956677866467721584, guid: 36325debe48873d4dad04be2a1ba33b1, type: 3}
   sprintMultiplier: 1.5
+  airControlMultiplier: 0.35
   groundLayers:
     serializedVersion: 2
     m_Bits: 128
